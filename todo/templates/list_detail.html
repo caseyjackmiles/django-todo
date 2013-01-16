@@ -1,0 +1,68 @@
+{% load url from future %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Django Todo App | {{ todo_list }}</title>
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/imports.css">
+	<script src="{{ STATIC_URL }}js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+	<section class="row">
+	<div class="twelve columns head">
+		<h1>{{ todo_list }} <small>To-Do List</small></h1>
+	</div>
+	</section>
+
+	<section class="row">
+	<div class="eight columns">
+	<h2>To-do items:</h2>
+
+	{% if todo_list.item_set.count == 0 %}
+		<h5 style="margin-left: 30px">This list doesn't have any to-do items!<br />
+		Create some using the form at right.</h5>
+
+	{% else %}
+	<ul class="square">
+	{% for item in todo_list.item_set.all %}
+		{% if item.is_complete %}
+		<li style="text-decoration:line-through"><a href="{% url 'todo.views.item_detail' item.id %}">{{ item }}</a></li>
+		{% else %}
+		<li><a href="{% url 'todo.views.item_detail' item.id %}">{{ item }}</a></li>
+		{% endif %}
+	{% endfor %}
+	</ul>
+
+	{% endif %}
+
+	<form id="deleteform" action="{% url 'todo.views.list_delete' todo_list.id %}" method="post">
+		{% csrf_token %}
+		<p class="primary small btn"><a onclick="document.getElementById('deleteform').submit();">Delete List</a></p>
+	</form>
+
+	</div>		<!-- END EIGHT-COLUMN AREA -->
+
+	<div class="four columns">
+	<form action="{% url 'todo.views.list_detail' todo_list.id %}" method="post">
+		{% csrf_token %}
+		{{ newItem_form.as_p }}
+		<input type="submit" value="Create New To-Do Item" />
+	</form>
+
+	<br />
+	<p><a href="{% url 'todo.views.status_report' %}">View All lists</a></p>
+
+	</div> <!-- END FOUR-COLUMN FORM AND BREADCRUMB AREA -->
+
+	</section>
+
+</div>	<!-- END CONTAINER DIV -->
+
+</body>
+
+</html>

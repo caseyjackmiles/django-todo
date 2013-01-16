@@ -1,0 +1,55 @@
+{% load url from future %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Status Report</title>
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/imports.css">
+	<script src="{{ STATIC_URL }}js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+	<section class="row">
+	<div class="twelve columns head">
+		<h1>To-Do List Status Report</h1>
+	</div>
+	</section>
+
+	<section class="row">
+	<div class="eight columns">
+	{% if not todo_listing %}
+
+		<h5>You haven't made any to-do lists yet!<br />
+		Add some using the form at right.</h5>
+
+	{% else %}
+	{% for todo_dict in todo_listing %}
+
+	<h3><a href="{% url 'todo.views.list_detail' todo_dict.list_object.id %}">{{ todo_dict.list_object.title }}</a></h2>
+	<ul class="square">
+		<li>Number of items: {{ todo_dict.item_count }}</li>
+		<li>Number complete: {{ todo_dict.items_complete }} ({{ todo_dict.percent_complete }}%)</li>
+	</ul>
+	{% endfor %}
+
+	{% endif %}
+	</div> <!-- END EIGHT-COLUMN AREA -->
+	
+	<div class="four columns">
+	<form action="{% url 'todo.views.status_report' %}" method="post">
+		{% csrf_token %}
+		{{ newList_form.as_p }}
+		<input type="submit" value="Create New List" />
+	</form>
+	</div>	<!-- END FOUR-COLUMN FORM AREA -->
+
+	</section>
+
+</div>	<!-- END CONTAINER DIV -->
+
+</body>
+</html>

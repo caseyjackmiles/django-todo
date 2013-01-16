@@ -1,0 +1,48 @@
+{% load url from future %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Django Todo App | {{ todo_item }}</title>
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/imports.css">
+	<script src="{{ STATIC_URL }}js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+	<section class="row">
+	<div class="twelve columns head">
+	<h1>{{ todo_item }} <small>To-Do Item</small></h1>
+	</div>
+	</section>
+
+	<section class="row">
+	<div class="eight columns">
+	<p>List: {{ todo_item.todo_list }}</p>
+	<p>{{ todo_item.priority_name }} Priority</p>
+	<p>Created: {{ todo_item.created_date }}</p>
+
+	<form action="{% url 'todo.views.item_detail' todo_item.id %}" method="post">
+		{% csrf_token %}
+		{{ complete_form.as_p }}
+		<input type="submit" value="Submit" />
+	</form>
+
+	<br />
+	<form id="deleteform" action="{% url 'todo.views.item_delete' todo_item.id %}" method="post">
+		{% csrf_token %}
+		<p class="primary small btn"><a onclick="document.getElementById('deleteform').submit();">Delete Item</a></p>
+	</form>
+
+	</div>
+
+	<div class="four columns">
+	<p><a href="{% url 'todo.views.list_detail' todo_item.todo_list.id %}">Back to {{ todo_item.todo_list.title }}</a></p>
+	</div>
+
+</body>
+
+</html>
