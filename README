@@ -1,0 +1,3 @@
+Simple to-do management application written in Django.
+
+Manages lists of to-do items and has simple front-end crud operations.
